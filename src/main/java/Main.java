@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
 
@@ -11,8 +12,8 @@ public class Main {
 
         //TODO obsluga wartosci z bazy (ustalenie grup) oraz wejsciowych piosenek
 
-        Song song = new Song("xcvbn", 2.2, 2.67);
-        int max = 50;
+        Song song = new Song("xcvbn", 2.2, 4.67);
+        int max = 100;
         int iteration = 1;
         double probabilitySum;
         double rand;
@@ -52,8 +53,6 @@ public class Main {
             for (int i = 0; i < hive/2; i++) {
                 employed.get(i).visit();
                 employed.get(i).getFlower().setVisited(employed.get(i).getFlower().getVisited()+1);
-                employed.get(i).getFlower().setLastVisited(iteration);
-                employed.get(i).getFlower().setRichness(employed.get(i).getFlower().getRichness() + 1);
                 probabilitySum += employed.get(i).getFlower().calculateValue(iteration);
             }
 
@@ -81,9 +80,24 @@ public class Main {
                 onlookers.get(i).visit();
                 onlookers.get(i).getFlower().setVisited(employed.get(i).getFlower().getVisited()+1);
                 onlookers.get(i).getFlower().setLastVisited(iteration);
-                onlookers.get(i).getFlower().setRichness(employed.get(i).getFlower().getRichness() + 1);
                 onlookers.get(i).getFlower().calculateValue(iteration);
 
+            }
+
+            for (int i = 0; i < hive/2; i++) {
+                if (iteration - flowers.get(i).getLastVisited() == 5) {
+                    flowers.get(i).setExploited(false);
+                    flowers.get(i).setRichness(0);
+                    System.out.println("dieded" + iteration);
+                }
+            }
+
+            for (Bee employee:employed) {
+                while (employee.getFlower().getExploited() == false) {
+                    Random r = new Random();
+                    int x = r.nextInt(5);
+                    employee.setFlower(flowers.get(x));
+                }
             }
 
             iteration++;

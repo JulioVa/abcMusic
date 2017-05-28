@@ -17,7 +17,7 @@ public class Flower {
         this.type = type;
         this.distance = calculate(distance, song.getBeat());
         this.quality = calculate(quality, song.getOnset());
-        this.richness = 0;
+        this.richness = 1;
         calculateValue(1);
         this.lastVisited = 0;
     }
@@ -47,7 +47,7 @@ public class Flower {
         this.type = type;
     }
 
-    public boolean isExploited() {
+    public boolean getExploited() {
         return exploited;
     }
 
