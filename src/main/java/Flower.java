@@ -26,6 +26,7 @@ public class Flower {
         return Math.abs(flowerVariable - song);
     }
 
+    //TODO im mniejsze tym lepiej a jest zrobione ze gorzej
     public double calculateValue(int iteration){
         value = distance*quality*(richness/iteration);
         return value;

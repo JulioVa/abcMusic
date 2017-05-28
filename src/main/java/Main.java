@@ -41,8 +41,6 @@ public class Main {
             onlookers.add(new Bee(1, null));
         }
 
-        //TODO wyrzucanie kwiatkow, szukanie kwiatka dla bezkwiatkowej pszczoly
-
         while (iteration <= max){
             probabilitySum = 0.0;
             for (int i = 0; i < hive/2; i++) {
@@ -78,17 +76,18 @@ public class Main {
                     onlookers.get(i).setFlower(flowers.get(4));
                 }
                 onlookers.get(i).visit();
-                onlookers.get(i).getFlower().setVisited(employed.get(i).getFlower().getVisited()+1);
+                onlookers.get(i).getFlower().setVisited(onlookers.get(i).getFlower().getVisited()+1);
                 onlookers.get(i).getFlower().setLastVisited(iteration);
                 onlookers.get(i).getFlower().calculateValue(iteration);
-
             }
+            //System.out.println(iteration + " " + onlookers.get(0).getFlower().getType() + " " + onlookers.get(1).getFlower().getType() + " " + onlookers.get(2).getFlower().getType() + " " + onlookers.get(3).getFlower().getType() + " " + onlookers.get(4).getFlower().getType());
 
+            //TODO lepsze umieranie bo te umieraja a potem zyja albo zyja i nie umieraja i wogole smierc cos nie dziala
             for (int i = 0; i < hive/2; i++) {
                 if (iteration - flowers.get(i).getLastVisited() == 5) {
                     flowers.get(i).setExploited(false);
                     flowers.get(i).setRichness(0);
-                    System.out.println("dieded" + iteration);
+                    System.out.println("dieded " + iteration + " " + flowers.get(i).getType());
                 }
             }
 
@@ -99,6 +98,12 @@ public class Main {
                     employee.setFlower(flowers.get(x));
                 }
             }
+
+            for (int i = 0; i < hive/2; i++) {
+                System.out.print(flowers.get(i).getLastVisited() + " ");
+            }
+            System.out.println();
+            System.out.println();
 
             iteration++;
         }
