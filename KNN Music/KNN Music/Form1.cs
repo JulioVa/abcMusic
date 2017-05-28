@@ -18,8 +18,11 @@ namespace KNN_Music
     public partial class Form1 : Form
     {
         private string databaseUrl;
+        private string newUrl;
         private Song[] songs;
+        private Song[] newSongs;
         double minOnset = Double.MaxValue, maxOnset = Double.MinValue, minBeat = Double.MaxValue, maxBeat = Double.MinValue;
+        double minOnsetCur = Double.MaxValue, maxOnsetCur = Double.MinValue, minBeatCur = Double.MaxValue, maxBeatCur = Double.MinValue;
         Bitmap bmp, bmpBig;
         Dictionary<int, Color> colors = new Dictionary<int, Color>();
         int picSize = 500;
@@ -45,43 +48,66 @@ namespace KNN_Music
             openFileDialogDatabase.Filter = "Text files (*.txt)|*.txt";
             if (openFileDialogDatabase.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                textBoxUrl.Text = databaseUrl = openFileDialogDatabase.FileName;
-                buttonClassify.Enabled = true;
-            }
+                textBoxDatabaseDir.Text = databaseUrl = openFileDialogDatabase.FileName;
+                if(textBoxNewDir.Text.Length > 0)
+                    buttonClassify.Enabled = true;
 
-            if (File.Exists(databaseUrl))
-            {
-                string[] t = File.ReadAllLines(databaseUrl);
-                songs = new Song[t.Length];
-                for (int i = 0; i < songs.Length; i++)
+                if (File.Exists(databaseUrl))
                 {
-                    string[] split = t[i].Split(new string[] { "\\\\" }, StringSplitOptions.None);
-                    double onset = double.Parse(split[1], CultureInfo.GetCultureInfo("en-US"));
-                    double beat = double.Parse(split[2], CultureInfo.GetCultureInfo("en-US"));
-                    int genre = int.Parse(split[3]);
-                    songs[i] = new Song(onset, beat, genre);
+                    string[] t = File.ReadAllLines(databaseUrl);
+                    songs = new Song[t.Length];
+                    for (int i = 0; i < songs.Length; i++)
+                    {
+                        string[] split = t[i].Split(new string[] { "\\\\" }, StringSplitOptions.None);
+                        double onset = double.Parse(split[1], CultureInfo.GetCultureInfo("en-US"));
+                        double beat = double.Parse(split[2], CultureInfo.GetCultureInfo("en-US"));
+                        int genre = int.Parse(split[3]);
+                        songs[i] = new Song(split[0], onset, beat, genre);
 
-                    minOnset = Math.Min(minOnset, onset);
-                    maxOnset = Math.Max(maxOnset, onset);
-                    minBeat = Math.Min(minBeat, beat);
-                    maxBeat = Math.Max(maxBeat, beat);
+                        minOnset = Math.Min(minOnset, onset);
+                        maxOnset = Math.Max(maxOnset, onset);
+                        minBeat = Math.Min(minBeat, beat);
+                        maxBeat = Math.Max(maxBeat, beat);
+                    }
+                    minOnsetCur = minOnset;
+                    maxOnsetCur = maxOnset;
+                    minBeatCur = minBeat;
+                    maxBeatCur = maxBeat;
+                    Repaint(-1, -1);
                 }
+            }
+        }
 
-                Repaint(-1,-1);
+        private void buttonNewDir_Click(object sender, EventArgs e)
+        {
+            openFileDialogNew.Filter = "Text files (*.txt)|*.txt";
+            if (openFileDialogNew.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                textBoxNewDir.Text = newUrl = openFileDialogNew.FileName;
+                if (textBoxDatabaseDir.Text.Length > 0)
+                    buttonClassify.Enabled = true;
+                if (File.Exists(newUrl))
+                {
+                    comboBoxSelected.Items.Clear();
+                    string[] t = File.ReadAllLines(newUrl);
+                    newSongs = new Song[t.Length];
+                    for (int i = 0; i < newSongs.Length; i++)
+                    {
+                        string[] split = t[i].Split(new string[] { "\\\\" }, StringSplitOptions.None);
+                        double onset = double.Parse(split[1], CultureInfo.GetCultureInfo("en-US"));
+                        double beat = double.Parse(split[2], CultureInfo.GetCultureInfo("en-US"));
+                        newSongs[i] = new Song(split[0], onset, beat);
+                        comboBoxSelected.Items.Add(split[0]);
+                    }
+                    comboBoxSelected.SelectedIndex = 0;
+                }
             }
         }
 
         private void buttonClassify_Click(object sender, EventArgs e)
         {
-            Song curSong = new Song(double.Parse(textBoxOnset.Text), double.Parse(textBoxBeat.Text));
-
-            minOnset = Math.Min(minOnset, curSong.onset);
-            maxOnset = Math.Max(maxOnset, curSong.onset);
-            minBeat = Math.Min(minBeat, curSong.beat);
-            maxBeat = Math.Max(maxBeat, curSong.beat);
-
-            Repaint((int)Math.Round((curSong.onset - minOnset) / (maxOnset - minOnset) * (picSize - 1)), 
-                (int)Math.Round((curSong.beat - minBeat) / (maxBeat - minBeat) * (picSize - 1)));
+            Song curSong = newSongs[comboBoxSelected.SelectedIndex];
+                //new Song(double.Parse(textBoxOnset.Text), double.Parse(textBoxBeat.Text));
             
             int k = (int)numericUpDownK.Value;
 
@@ -89,11 +115,6 @@ namespace KNN_Music
                 songs[i].distance = Math.Sqrt(Math.Pow(curSong.onset - songs[i].onset, 2) + Math.Pow(curSong.beat - songs[i].beat, 2));
 
             Array.Sort(songs, Song.SortByDistance);
-
-            /*string text = "";
-            for (int i = 0; i < songs.Length; i++)
-                text += songs[i] + "\n";
-            MessageBox.Show(text);*/
 
             int genreSum = 0;
             for (int i = 0; i < k; i++)
@@ -110,10 +131,11 @@ namespace KNN_Music
             bmp = new Bitmap(picSize, picSize, PixelFormat.Format24bppRgb);
             using (var graphics = Graphics.FromImage(bmp))
             {
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 for (int i = 0; i < songs.Length; i++)
                 {
-                    int x = (int)Math.Round((songs[i].onset - minOnset) / (maxOnset - minOnset) * (picSize - 1)); 
-                    int y = (int)Math.Round((songs[i].beat - minBeat) / (maxBeat - minBeat) * (picSize - 1));
+                    int x = (int)Math.Round((songs[i].onset - minOnsetCur) / (maxOnsetCur - minOnsetCur) * (picSize - 1));
+                    int y = (int)Math.Round((songs[i].beat - minBeatCur) / (maxBeatCur - minBeatCur) * (picSize - 1));
                     graphics.FillEllipse(new SolidBrush(colors[songs[i].genre]), new Rectangle(x - 5, y - 5, 11, 11));
                 }
                 if(curX >= 0 && curY >= 0)
@@ -122,6 +144,19 @@ namespace KNN_Music
             }
 
             pictureBox.Image = bmp;
+        }
+
+        private void comboBoxSelected_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Song curSong = newSongs[comboBoxSelected.SelectedIndex];
+
+            minOnsetCur = Math.Min(minOnset, curSong.onset);
+            maxOnsetCur = Math.Max(maxOnset, curSong.onset);
+            minBeatCur = Math.Min(minBeat, curSong.beat);
+            maxBeatCur = Math.Max(maxBeat, curSong.beat);
+
+            Repaint((int)Math.Round((curSong.onset - minOnsetCur) / (maxOnsetCur - minOnsetCur) * (picSize - 1)),
+                (int)Math.Round((curSong.beat - minBeatCur) / (maxBeatCur - minBeatCur) * (picSize - 1)));
         }
     }
 }
