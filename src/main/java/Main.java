@@ -9,6 +9,8 @@ public class Main {
     public static void main(String[] args) {
         //createDatabase();
 
+        //TODO obsluga wartosci z bazy (ustalenie grup) oraz wejsciowych piosenek
+
         Song song = new Song("xcvbn", 2.2, 2.67);
         int max = 50;
         int iteration = 1;
