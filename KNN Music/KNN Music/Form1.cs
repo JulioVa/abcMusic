@@ -27,6 +27,7 @@ namespace KNN_Music
         Dictionary<int, Color> colors = new Dictionary<int, Color>();
         int picSize = 500;
         bool flash = false;
+        int genres = 5;
 
         public Form1()
         {
@@ -120,16 +121,28 @@ namespace KNN_Music
 
             Array.Sort(songs, Song.SortByDistance);
 
-            int genreSum = 0;
+            int[] count = new int[genres];
+            for (int i = 0; i < genres; i++)
+                count[i] = 0;
+
             for (int i = 0; i < k; i++)
             {
-                genreSum += songs[i].genre;
+                count[songs[i].genre-1]++;
                 songs[i].flash = true;
             }
 
-            int result = (int)Math.Round((double)genreSum / (double)k);
+            int result = 0, resultCount = 0;
 
-            textBoxResult.Text = result.ToString();
+            for (int i = 0; i < genres; i++)
+            {
+                if (count[i] > resultCount)
+                {
+                    resultCount = count[i];
+                    result = i;
+                }
+            }
+
+            textBoxResult.Text = (result+1).ToString();
 
             timerFlash.Start();
         }
