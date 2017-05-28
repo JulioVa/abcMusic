@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonDatabaseDir = new System.Windows.Forms.Button();
             this.textBoxDatabaseDir = new System.Windows.Forms.TextBox();
             this.buttonClassify = new System.Windows.Forms.Button();
@@ -45,6 +46,7 @@
             this.comboBoxSelected = new System.Windows.Forms.ComboBox();
             this.labelSelected = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.timerFlash = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownK)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -203,6 +205,11 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parametry algorytmu";
             // 
+            // timerFlash
+            // 
+            this.timerFlash.Interval = 500;
+            this.timerFlash.Tick += new System.EventHandler(this.timerFlash_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -254,6 +261,7 @@
         private System.Windows.Forms.ComboBox comboBoxSelected;
         private System.Windows.Forms.Label labelSelected;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Timer timerFlash;
     }
 }
 

@@ -26,6 +26,7 @@ namespace KNN_Music
         Bitmap bmp, bmpBig;
         Dictionary<int, Color> colors = new Dictionary<int, Color>();
         int picSize = 500;
+        bool flash = false;
 
         public Form1()
         {
@@ -112,17 +113,25 @@ namespace KNN_Music
             int k = (int)numericUpDownK.Value;
 
             for (int i = 0; i < songs.Length; i++)
+            {
                 songs[i].distance = Math.Sqrt(Math.Pow(curSong.onset - songs[i].onset, 2) + Math.Pow(curSong.beat - songs[i].beat, 2));
+                songs[i].flash = false;
+            }
 
             Array.Sort(songs, Song.SortByDistance);
 
             int genreSum = 0;
             for (int i = 0; i < k; i++)
+            {
                 genreSum += songs[i].genre;
+                songs[i].flash = true;
+            }
 
             int result = (int)Math.Round((double)genreSum / (double)k);
 
             textBoxResult.Text = result.ToString();
+
+            timerFlash.Start();
         }
 
         private void Repaint(int curX, int curY)
@@ -137,23 +146,38 @@ namespace KNN_Music
                     int x = (int)Math.Round((songs[i].onset - minOnsetCur) / (maxOnsetCur - minOnsetCur) * (picSize - 1));
                     int y = (int)Math.Round((songs[i].beat - minBeatCur) / (maxBeatCur - minBeatCur) * (picSize - 1));
                     graphics.FillEllipse(new SolidBrush(colors[songs[i].genre]), new Rectangle(x - 5, y - 5, 11, 11));
+                    if (flash && songs[i].flash)
+                        graphics.DrawEllipse(new Pen(Color.White, 2), new Rectangle(x - 6, y - 6, 13, 13));
                 }
                 if(curX >= 0 && curY >= 0)
                     graphics.FillEllipse(new SolidBrush(Color.White), new Rectangle(curX - 5, curY - 5, 11, 11));
                 graphics.DrawImage(bmp, 0, 0);
             }
-
             pictureBox.Image = bmp;
         }
 
         private void comboBoxSelected_SelectedIndexChanged(object sender, EventArgs e)
         {
+            timerFlash.Stop();
+            for (int i = 0; i < songs.Length; i++)
+                songs[i].flash = false;
+
             Song curSong = newSongs[comboBoxSelected.SelectedIndex];
 
             minOnsetCur = Math.Min(minOnset, curSong.onset);
             maxOnsetCur = Math.Max(maxOnset, curSong.onset);
             minBeatCur = Math.Min(minBeat, curSong.beat);
             maxBeatCur = Math.Max(maxBeat, curSong.beat);
+
+            Repaint((int)Math.Round((curSong.onset - minOnsetCur) / (maxOnsetCur - minOnsetCur) * (picSize - 1)),
+                (int)Math.Round((curSong.beat - minBeatCur) / (maxBeatCur - minBeatCur) * (picSize - 1)));
+        }
+
+        private void timerFlash_Tick(object sender, EventArgs e)
+        {
+            flash = !flash;
+
+            Song curSong = newSongs[comboBoxSelected.SelectedIndex];
 
             Repaint((int)Math.Round((curSong.onset - minOnsetCur) / (maxOnsetCur - minOnsetCur) * (picSize - 1)),
                 (int)Math.Round((curSong.beat - minBeatCur) / (maxBeatCur - minBeatCur) * (picSize - 1)));

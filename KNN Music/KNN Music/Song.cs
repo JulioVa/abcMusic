@@ -14,6 +14,7 @@ namespace KNN_Music
         public double beat;
         public int genre;
         public double distance;
+        public bool flash = false;
 
         public Song(double onset, double beat)
         {
