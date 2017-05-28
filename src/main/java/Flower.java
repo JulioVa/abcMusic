@@ -9,6 +9,7 @@ public class Flower {
     private double quality;   //abs(grouponset-songonset)
     private int richness;     //how many bees visited
     private double value;
+    private int visited;      //visitations in current iteration
     private int lastVisited;  //on which iteration was the latest visit
 
     public Flower (String type, double distance, double quality, Song song) {
@@ -25,8 +26,17 @@ public class Flower {
         return Math.abs(flowerVariable - song);
     }
 
-    public void calculateValue(int iteration){
+    public double calculateValue(int iteration){
         value = distance*quality*(richness/iteration);
+        return value;
+    }
+
+    public int getVisited() {
+        return visited;
+    }
+
+    public void setVisited(int visited) {
+        this.visited = visited;
     }
 
     public String getType() {

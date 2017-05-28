@@ -10,6 +10,10 @@ public class Main {
         //createDatabase();
 
         Song song = new Song("xcvbn", 2.2, 2.67);
+        int max = 50;
+        int iteration = 1;
+        double probabilitySum;
+        double rand;
 
         int hive = 10;
         List<Group> genre = new ArrayList<Group>();
@@ -19,6 +23,11 @@ public class Main {
         genre.add(new Group("disco", 5.0, 5.0));
         genre.add(new Group("country", 3.65, 2.13));
 
+        List<Double> probabilities = new ArrayList<Double>();
+        for (int i = 0; i < hive/2; i++) {
+            probabilities.add(0.0);
+        }
+
         List<Flower> flowers = new ArrayList<Flower>();
         List<Bee> employed = new ArrayList<Bee>();
         List<Bee> onlookers = new ArrayList<Bee>();
@@ -26,7 +35,60 @@ public class Main {
         for (int i = 0; i < hive/2; i++) {
             flowers.add(new Flower(genre.get(i).getName(), genre.get(i).getBeat(), genre.get(i).getOnset(), song));
             employed.add(new Bee(0, flowers.get(i)));
-            onlookers.add(new Bee(1, flowers.get(i+5)));
+            onlookers.add(new Bee(1, null));
+        }
+
+        //TODO wyrzucanie kwiatkow, szukanie kwiatka dla bezkwiatkowej pszczoly
+
+        while (iteration <= max){
+            probabilitySum = 0.0;
+            for (int i = 0; i < hive/2; i++) {
+                flowers.get(i).setVisited(0);
+            }
+
+            //employed phase
+            for (int i = 0; i < hive/2; i++) {
+                employed.get(i).visit();
+                employed.get(i).getFlower().setVisited(employed.get(i).getFlower().getVisited()+1);
+                employed.get(i).getFlower().setLastVisited(iteration);
+                employed.get(i).getFlower().setRichness(employed.get(i).getFlower().getRichness() + 1);
+                probabilitySum += employed.get(i).getFlower().calculateValue(iteration);
+            }
+
+            //dance phase
+            probabilities.set(0, flowers.get(0).getValue()/probabilitySum);
+            probabilities.set(1, (flowers.get(1).getValue()/probabilitySum) + flowers.get(0).getValue());
+            probabilities.set(2, (flowers.get(2).getValue()/probabilitySum) + flowers.get(1).getValue());
+            probabilities.set(3, (flowers.get(3).getValue()/probabilitySum) + flowers.get(2).getValue());
+            probabilities.set(4, (flowers.get(4).getValue()/probabilitySum) + flowers.get(3).getValue());
+
+            //onlookers phase
+            for (int i = 0; i < hive/2; i++) {
+                rand = Math.random();
+                if (rand <= probabilities.get(0)) {
+                    onlookers.get(i).setFlower(flowers.get(0));
+                } else if (rand <= probabilities.get(1)) {
+                    onlookers.get(i).setFlower(flowers.get(1));
+                } else if (rand <= probabilities.get(2)) {
+                    onlookers.get(i).setFlower(flowers.get(2));
+                } else if (rand <= probabilities.get(3)) {
+                    onlookers.get(i).setFlower(flowers.get(3));
+                } else if (rand <= probabilities.get(4)) {
+                    onlookers.get(i).setFlower(flowers.get(4));
+                }
+                onlookers.get(i).visit();
+                onlookers.get(i).getFlower().setVisited(employed.get(i).getFlower().getVisited()+1);
+                onlookers.get(i).getFlower().setLastVisited(iteration);
+                onlookers.get(i).getFlower().setRichness(employed.get(i).getFlower().getRichness() + 1);
+                onlookers.get(i).getFlower().calculateValue(iteration);
+
+            }
+
+            iteration++;
+        }
+
+        for (int i = 0; i < hive/2; i++) {
+            System.out.println(flowers.get(i).getVisited());
         }
 
     }
