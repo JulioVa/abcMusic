@@ -9,10 +9,12 @@ namespace KNN_Music
 {
     class Song
     {
+        public string title;
         public double onset;
         public double beat;
         public int genre;
         public double distance;
+        public bool flash = false;
 
         public Song(double onset, double beat)
         {
@@ -20,9 +22,15 @@ namespace KNN_Music
             this.beat = beat;
         }
 
-        public Song(double onset, double beat, int genre)
-            : this(onset, beat) 
-        { 
+        public Song(string title, double onset, double beat)
+            : this(onset, beat)
+        {
+            this.title = title;
+        }
+
+        public Song(string title, double onset, double beat, int genre)
+            : this(title, onset, beat) 
+        {
             this.genre = genre; 
         }
 
