@@ -1,0 +1,9 @@
+d:\mateusz\documents\visual studio 2012\Projects\KNN Music\KNN Music\bin\Debug\KNN Music.exe.config
+d:\mateusz\documents\visual studio 2012\Projects\KNN Music\KNN Music\bin\Debug\KNN Music.exe
+d:\mateusz\documents\visual studio 2012\Projects\KNN Music\KNN Music\bin\Debug\KNN Music.pdb
+d:\mateusz\documents\visual studio 2012\Projects\KNN Music\KNN Music\obj\Debug\KNN Music.csprojResolveAssemblyReference.cache
+d:\mateusz\documents\visual studio 2012\Projects\KNN Music\KNN Music\obj\Debug\KNN_Music.Form1.resources
+d:\mateusz\documents\visual studio 2012\Projects\KNN Music\KNN Music\obj\Debug\KNN_Music.Properties.Resources.resources
+d:\mateusz\documents\visual studio 2012\Projects\KNN Music\KNN Music\obj\Debug\KNN Music.csproj.GenerateResource.Cache
+d:\mateusz\documents\visual studio 2012\Projects\KNN Music\KNN Music\obj\Debug\KNN Music.exe
+d:\mateusz\documents\visual studio 2012\Projects\KNN Music\KNN Music\obj\Debug\KNN Music.pdb
