@@ -12,7 +12,7 @@ public class Main {
 
         //TODO obsluga wartosci z bazy (ustalenie grup) oraz wejsciowych piosenek
 
-        Song song = new Song("xcvbn", 2.2, 4.67);
+        Song song = new Song("xcvbn", 2.2, 2.67);
         int max = 1000;
         int iteration = 1;
         double probabilitySum;
@@ -109,7 +109,7 @@ public class Main {
         }
 
         for (int i = 0; i < hive/2; i++) {
-            System.out.println(flowers.get(i).getVisited());
+            System.out.println(flowers.get(i).getVisited() + " " + flowers.get(i).getType());
         }
 
     }
