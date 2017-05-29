@@ -10,19 +10,19 @@ public class Main {
     public static void main(String[] args) {
         //createDatabase();
 
-        Song song = new Song("xcvbn", 2.2, 2.67);
-        int max = 1000;
+        Song song = new Song("xcvbn", 1.1, 3.0);
+        int max = 100;
         int iteration = 1;
         double probabilitySum;
         double rand;
 
         int hive = 10;
         List<Group> genre = new ArrayList<Group>();
-        genre.add(new Group("rock", 2.5, 2.4));
-        genre.add(new Group("rap", 3.14, 3.8));
-        genre.add(new Group("classical", 1.2, 4.2));
-        genre.add(new Group("disco", 5.0, 5.0));
-        genre.add(new Group("country", 3.65, 2.13));
+        genre.add(new Group("ballad", 1.6944509, 1.962863));
+        genre.add(new Group("country", 2.1063444, 3.6772471));
+        genre.add(new Group("rock", 1.9774737, 2.9186816));
+        genre.add(new Group("metal", 1.9568408, 2.8707632));
+        genre.add(new Group("pop", 2.0201884, 3.2823610));
 
         List<Double> probabilities = new ArrayList<Double>();
         for (int i = 0; i < hive/2; i++) {
