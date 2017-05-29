@@ -13,7 +13,7 @@ public class Main {
         //TODO obsluga wartosci z bazy (ustalenie grup) oraz wejsciowych piosenek
 
         Song song = new Song("xcvbn", 2.2, 4.67);
-        int max = 100;
+        int max = 1000;
         int iteration = 1;
         double probabilitySum;
         double rand;
@@ -64,15 +64,15 @@ public class Main {
             //onlookers phase
             for (int i = 0; i < hive/2; i++) {
                 rand = Math.random();
-                if (rand <= probabilities.get(0)) {
+                if (rand <= probabilities.get(0) && flowers.get(0).getExploited()) {
                     onlookers.get(i).setFlower(flowers.get(0));
-                } else if (rand <= probabilities.get(1)) {
+                } else if (rand <= probabilities.get(1) && flowers.get(1).getExploited()) {
                     onlookers.get(i).setFlower(flowers.get(1));
-                } else if (rand <= probabilities.get(2)) {
+                } else if (rand <= probabilities.get(2) && flowers.get(2).getExploited()) {
                     onlookers.get(i).setFlower(flowers.get(2));
-                } else if (rand <= probabilities.get(3)) {
+                } else if (rand <= probabilities.get(3) && flowers.get(3).getExploited()) {
                     onlookers.get(i).setFlower(flowers.get(3));
-                } else if (rand <= probabilities.get(4)) {
+                } else if (rand <= probabilities.get(4) && flowers.get(4).getExploited()) {
                     onlookers.get(i).setFlower(flowers.get(4));
                 }
                 onlookers.get(i).visit();
@@ -99,11 +99,11 @@ public class Main {
                 }
             }
 
-            for (int i = 0; i < hive/2; i++) {
-                System.out.print(flowers.get(i).getLastVisited() + " ");
+            /*for (int i = 0; i < hive/2; i++) {
+                System.out.print(flowers.get(i).getVisited() + " ");
             }
             System.out.println();
-            System.out.println();
+            System.out.println();*/
 
             iteration++;
         }
