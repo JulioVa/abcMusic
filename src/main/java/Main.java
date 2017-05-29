@@ -10,8 +10,6 @@ public class Main {
     public static void main(String[] args) {
         //createDatabase();
 
-        //TODO obsluga wartosci z bazy (ustalenie grup) oraz wejsciowych piosenek
-
         Song song = new Song("xcvbn", 2.2, 2.67);
         int max = 1000;
         int iteration = 1;
@@ -21,7 +19,7 @@ public class Main {
         int hive = 10;
         List<Group> genre = new ArrayList<Group>();
         genre.add(new Group("rock", 2.5, 2.4));
-        genre.add(new Group("rap", 3.14, 1.8));
+        genre.add(new Group("rap", 3.14, 3.8));
         genre.add(new Group("classical", 1.2, 4.2));
         genre.add(new Group("disco", 5.0, 5.0));
         genre.add(new Group("country", 3.65, 2.13));
@@ -82,7 +80,6 @@ public class Main {
             }
             //System.out.println(iteration + " " + onlookers.get(0).getFlower().getType() + " " + onlookers.get(1).getFlower().getType() + " " + onlookers.get(2).getFlower().getType() + " " + onlookers.get(3).getFlower().getType() + " " + onlookers.get(4).getFlower().getType());
 
-            //TODO lepsze umieranie bo te umieraja a potem zyja albo zyja i nie umieraja i wogole smierc cos nie dziala
             for (int i = 0; i < hive/2; i++) {
                 if (iteration - flowers.get(i).getLastVisited() == 5) {
                     flowers.get(i).setExploited(false);
